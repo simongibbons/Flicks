@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +71,7 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
         return movieList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView imageView;
         protected CardView cardView;
@@ -77,6 +80,13 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
             super(view);
             this.imageView = (ImageView) view.findViewById(R.id.grid_item_poster_imageview);
             this.cardView = (CardView) view;
+
+            cardView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.v("ViewHolder", "Item clicked at position" + getAdapterPosition());
         }
     }
 
@@ -107,26 +117,28 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
 
         @Override
         public void onResponse(Call call, Response response) throws IOException {
-            List<MovieData> movies;
             try {
-                movies = MovieData.getMovieDataFromJson(response.body().string());
+                JSONObject result = new JSONObject(response.body().string());
+                JSONArray movieJSONArray = result.getJSONArray("results");
+
+                for(int i = 0 ; i < movieJSONArray.length() ; ++i) {
+                    movieList.add(MovieData.getMovieDataFromJson(movieJSONArray.getJSONObject(i)));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
             }
 
-            for(MovieData movie : movies) {
-                movieList.add(movie);
-            }
-
-            nextPage += 1;
-
+            // Let the UI know that we have new movies
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     notifyDataSetChanged();
                 }
             });
+
+            // Update the page count so the next time we run we get new content.
+            nextPage += 1;
         }
     }
 

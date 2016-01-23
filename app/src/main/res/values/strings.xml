@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Flicks</string>
+    <string name="poster_default_description">Movie Poster</string>
+</resources>

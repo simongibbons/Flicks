@@ -27,8 +27,6 @@ public class PosterListFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.posterlist_recyclerview);
 
-
-
         // Add a decorator to put a margin between cards
         recyclerView.addItemDecoration(new MarginDecoration(getActivity()));
 

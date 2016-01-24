@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -19,11 +21,29 @@ import okhttp3.Response;
 
 public class TheMovieDbAPI {
 
+    static final String BASE_URL =
+            "https://api.themoviedb.org/3/discover/movie";
+
+    static final String PAGE_PARAM = "page";
+    static final String API_KEY_PARAM = "api_key";
+    static final String SORT_PARAM = "sort_by";
+
+
+    // Tags for sort methods
+    static public final int SORT_POPULARITY = 0;
+    static public final int SORT_NUM_RATINGS = 1;
+
+    static final Map<Integer, String> sort_map = new HashMap<>();
+    static {
+        sort_map.put(SORT_POPULARITY, "popularity.desc");
+        sort_map.put(SORT_NUM_RATINGS, "vote_cout.desc");
+    }
+
     public static String buildPosterUrl(String posterPath) {
         return "https://image.tmdb.org/t/p/w185" + posterPath;
     }
 
-    public static void loadMoviePage(int nextPage, final List<MovieData> movieList,
+    public static void loadMoviePage(int nextPage, final List<MovieData> movieList, int sort_mode,
                                      final Handler handler, final Runnable onCompletion) {
         if(onCompletion == null && handler == null) {
             return;
@@ -31,12 +51,8 @@ public class TheMovieDbAPI {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
 
-        final String BASE_URL =
-                "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc";
-        final String PAGE_PARAM = "page";
-        final String API_KEY_PARAM = "api_key";
-
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter(SORT_PARAM, sort_map.get(sort_mode))
                 .appendQueryParameter(PAGE_PARAM, Integer.toString(nextPage))
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)
                 .build();

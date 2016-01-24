@@ -98,7 +98,8 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
             }
         };
 
-        TheMovieDbAPI.loadMoviePage(nextPage, movieList, handler, uiCallback);
+        TheMovieDbAPI.loadMoviePage(nextPage, movieList,
+                TheMovieDbAPI.SORT_POPULARITY, handler, uiCallback);
     }
 
 

@@ -1,4 +1,4 @@
-package com.simongibbons.flicks;
+package com.simongibbons.flicks.fragments;
 
 
 import android.os.Bundle;
@@ -8,6 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.simongibbons.flicks.MarginDecoration;
+import com.simongibbons.flicks.MovieData;
+import com.simongibbons.flicks.PosterListAdapter;
+import com.simongibbons.flicks.R;
 
 import java.util.ArrayList;
 import java.util.List;

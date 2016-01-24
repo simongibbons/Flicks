@@ -7,4 +7,4 @@
     android:columnWidth="@dimen/movie_list_width"
     android:clipToPadding="false"
     android:background="@android:color/background_light"
-    tools:context="com.simongibbons.flicks.PosterListFragment" />
+    tools:context=".fragments.PosterListFragment" />

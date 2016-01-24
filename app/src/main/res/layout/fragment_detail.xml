@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.simongibbons.flicks.DetailFragment">
+    tools:context=".fragments.DetailFragment"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,11 +17,42 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"/>
 
-        <TextView
-            android:id="@+id/detail_fragment_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/detail_fragment_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/detail_fragment_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/detail_fragment_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/favourite_image_button"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/star_big_off" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/detail_fragment_overview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

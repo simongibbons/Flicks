@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 
 public class DetailFragment extends Fragment {
@@ -16,6 +19,7 @@ public class DetailFragment extends Fragment {
     public DetailFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -30,6 +34,11 @@ public class DetailFragment extends Fragment {
         if(movie != null) {
             TextView titleView = (TextView) view.findViewById(R.id.detail_fragment_title);
             titleView.setText(movie.title);
+
+            ImageView posterView = (ImageView) view.findViewById(R.id.detail_fragment_poster);
+            Picasso.with(getActivity())
+                    .load("https://image.tmdb.org/t/p/w185" + movie.posterPath)
+                    .into(posterView);
         }
 
         return view;

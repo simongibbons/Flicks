@@ -44,12 +44,11 @@ public class TheMovieDbAPI {
     }
 
     public static void loadMoviePage(int nextPage, final List<MovieData> movieList, int sort_mode,
+                                     OkHttpClient okHttpClient,
                                      final Handler handler, final Runnable onCompletion) {
         if(onCompletion == null && handler == null) {
             return;
         }
-
-        final OkHttpClient okHttpClient = new OkHttpClient();
 
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(SORT_PARAM, sort_map.get(sort_mode))

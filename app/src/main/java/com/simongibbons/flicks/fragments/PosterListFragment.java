@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.simongibbons.flicks.FlicksApplication;
 import com.simongibbons.flicks.MarginDecoration;
 import com.simongibbons.flicks.MovieData;
 import com.simongibbons.flicks.PosterListAdapter;
@@ -46,7 +47,9 @@ public class PosterListFragment extends Fragment {
             movieList = new ArrayList<>();
         }
 
-        recyclerView.setAdapter(new PosterListAdapter(getActivity(), movieList));
+        FlicksApplication app = (FlicksApplication) getActivity().getApplication();
+
+        recyclerView.setAdapter(new PosterListAdapter(getActivity(), movieList, app.getOkHttpClient()));
 
         return rootView;
     }

@@ -3,5 +3,5 @@
     <string name="poster_default_description">Movie Poster</string>
     <string name="title_activity_detail">DetailActivity</string>
 
-    <string name="format_rating">Rating: <xliff:g id="rating">%1.2f</xliff:g> / 10</string>
+    <string name="format_rating">Rating: <xliff:g id="rating">%1.1f</xliff:g> / 10</string>
 </resources>

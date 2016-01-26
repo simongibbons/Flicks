@@ -16,15 +16,19 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+
 public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.ViewHolder> {
 
-    private Context mContext;
+    private Context context;
     private List<MovieData> movieList = new ArrayList<>();
     private int nextPage = 1;
+    private OkHttpClient okHttpClient;
 
-    public PosterListAdapter(Context context, List<MovieData> movieList) {
-        mContext = context;
+    public PosterListAdapter(Context context, List<MovieData> movieList, OkHttpClient okHttpClient) {
+        this.context = context;
         this.movieList = movieList;
+        this.okHttpClient = okHttpClient;
 
         if(movieList != null) {
             nextPage = (movieList.size() / 20) + 1;
@@ -45,7 +49,7 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         MovieData movie = movieList.get(position);
 
-        Picasso.with(mContext)
+        Picasso.with(context)
                 .load(TheMovieDbAPI.buildPosterUrl(movie.posterPath))
                 .into(holder.imageView);
 
@@ -79,10 +83,10 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mContext, DetailActivity.class);
+            Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra("movie", movieList.get(getAdapterPosition()));
 
-            mContext.startActivity(intent);
+            context.startActivity(intent);
         }
     }
 
@@ -99,7 +103,8 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
         };
 
         TheMovieDbAPI.loadMoviePage(nextPage, movieList,
-                TheMovieDbAPI.SORT_POPULARITY, handler, uiCallback);
+                TheMovieDbAPI.SORT_POPULARITY,
+                okHttpClient, handler, uiCallback);
     }
 
 

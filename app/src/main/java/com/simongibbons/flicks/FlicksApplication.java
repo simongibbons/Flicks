@@ -1,6 +1,9 @@
 package com.simongibbons.flicks;
 
 import android.app.Application;
+import android.util.Log;
+
+import java.io.IOException;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -19,6 +22,12 @@ public class FlicksApplication extends Application {
 
         int cacheSize = 5 * 1024 * 1024; //5 MiB for API responses only
         Cache cache = new Cache(getCacheDir(), cacheSize);
+
+        try {
+            cache.initialize();
+        } catch (IOException e) {
+            Log.w(LOG_TAG, "Could not initialize okHTTP cache");
+        }
 
         okHttpClient = new OkHttpClient.Builder()
                 .cache(cache)

@@ -54,11 +54,6 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
                 .into(holder.imageView);
 
         holder.imageView.setContentDescription(movie.title);
-
-        // Check if we need to grab more data
-        if(position == (getItemCount() - 1) ){
-            loadMoreMovies();
-        }
     }
 
 
@@ -91,13 +86,13 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
     }
 
 
-    private void loadMoreMovies() {
+    public void loadMoreMovies() {
         Handler handler = new Handler(Looper.getMainLooper());
 
         Runnable uiCallback = new Runnable() {
             @Override
             public void run() {
-                notifyDataSetChanged();
+                notifyItemRangeInserted(getItemCount() - 20, 20);
                 nextPage += 1;
             }
         };

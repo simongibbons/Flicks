@@ -36,7 +36,7 @@ public class TheMovieDbAPI {
     static final Map<Integer, String> sort_map = new HashMap<>();
     static {
         sort_map.put(SORT_POPULARITY, "popularity.desc");
-        sort_map.put(SORT_NUM_RATINGS, "vote_cout.desc");
+        sort_map.put(SORT_NUM_RATINGS, "vote_count.desc");
     }
 
     public static String buildPosterUrl(String posterPath) {

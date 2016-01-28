@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="always|withText"
+        android:title="Sort By">
+        <menu>
+            <group android:id="@+id/menu_sort">
+
+                <item android:id="@+id/menu_sort_popularity"
+                android:title="Sort by Popularity" />
+
+                <item android:id="@+id/menu_sort_rating"
+                    android:title="Sort by Rating" />
+
+            </group>
+        </menu>
+    </item>
+
+</menu>

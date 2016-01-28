@@ -1,12 +1,18 @@
 package com.simongibbons.flicks.fragments;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +21,7 @@ import com.simongibbons.flicks.MarginDecoration;
 import com.simongibbons.flicks.MovieData;
 import com.simongibbons.flicks.PosterListAdapter;
 import com.simongibbons.flicks.R;
+import com.simongibbons.flicks.TheMovieDbAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +40,49 @@ public class PosterListFragment extends Fragment {
     private PosterListAdapter adapter;
 
     public PosterListFragment() {
-        // Required empty public constructor
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.poster_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int groupId = item.getGroupId();
+
+        Log.v("groupId", Integer.toString(groupId));
+
+        if(groupId == R.id.menu_sort) {
+            int id = item.getItemId();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = preferences.edit();
+
+            switch (id) {
+                case R.id.menu_sort_popularity: {
+                    editor.putInt("sort_mode", TheMovieDbAPI.SORT_POPULARITY);
+                    Log.v("Mode Change", "Setting sort mode to popularity");
+                    break;
+                }
+                case R.id.menu_sort_rating: {
+                    editor.putInt("sort_mode", TheMovieDbAPI.SORT_NUM_RATINGS);
+                    Log.v("Mode Change", "Setting sort mode to ratings");
+                    break;
+                }
+
+            }
+
+            editor.commit();
+            adapter.notifySortModeChanged();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -66,7 +115,7 @@ public class PosterListFragment extends Fragment {
 
             private int previousTotal = 0;
             private boolean loading = true;
-            private int visibleThreshold = 15;
+            private int visibleThreshold = 3;
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

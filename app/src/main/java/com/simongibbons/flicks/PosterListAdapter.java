@@ -2,8 +2,10 @@ package com.simongibbons.flicks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,17 +26,34 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
     private List<MovieData> movieList = new ArrayList<>();
     private int nextPage = 1;
     private OkHttpClient okHttpClient;
+    private int sort_mode;
 
     public PosterListAdapter(Context context, List<MovieData> movieList, OkHttpClient okHttpClient) {
         this.context = context;
         this.movieList = movieList;
         this.okHttpClient = okHttpClient;
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sort_mode = preferences.getInt("sort_mode", TheMovieDbAPI.SORT_POPULARITY);
+
         if(movieList != null) {
             nextPage = (movieList.size() / 20) + 1;
         }
 
         loadMoreMovies();
+    }
+
+    public void notifySortModeChanged() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int new_sort_mode = preferences.getInt("sort_mode", TheMovieDbAPI.SORT_POPULARITY);
+
+        if(new_sort_mode != sort_mode) {
+            sort_mode = new_sort_mode;
+
+            nextPage = 1;
+            movieList.clear();
+            loadMoreMovies();
+        }
     }
 
     @Override
@@ -92,13 +111,13 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
         Runnable uiCallback = new Runnable() {
             @Override
             public void run() {
-                notifyItemRangeInserted(getItemCount() - 20, 20);
+                notifyDataSetChanged();
                 nextPage += 1;
             }
         };
 
         TheMovieDbAPI.loadMoviePage(nextPage, movieList,
-                TheMovieDbAPI.SORT_POPULARITY,
+                sort_mode,
                 okHttpClient, handler, uiCallback);
     }
 

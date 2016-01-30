@@ -40,6 +40,7 @@ public class PosterListFragment extends Fragment {
 
     private GridLayoutManager manager;
     private PosterListAdapter adapter;
+    private RecyclerView recyclerView;
 
     public PosterListFragment() {
         setHasOptionsMenu(true);
@@ -93,7 +94,7 @@ public class PosterListFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_poster_list, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.posterlist_recyclerview);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.posterlist_recyclerview);
 
         // TODO change this to adapt to screen width!
         manager = new GridLayoutManager(getActivity(), 2);

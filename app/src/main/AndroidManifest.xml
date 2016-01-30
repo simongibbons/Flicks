@@ -21,6 +21,11 @@
         <activity android:name=".DetailActivity"
             android:label="@string/title_activity_detail">
         </activity>
+
+        <provider
+            android:authorities="com.simongibbons.flicks.database.MovieProvider"
+            android:name="com.simongibbons.flicks.database.generated.MovieProvider"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -69,6 +69,8 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         MovieData movie = movieList.get(position);
 
+        holder.imageView.setImageDrawable(null);
+
         Picasso.with(context)
                 .load(TheMovieDbAPI.buildPosterUrl(movie.posterPath))
                 .into(holder.imageView);

@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.simongibbons.flicks"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+
+        def STRING = "String"
+        buildConfigField STRING, "MOVIE_DB_API_KEY", TMDB_API_KEY
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Support Library UI Components
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:palette-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:cardview-v7:23.1.1'
+
+    // HTTP Library
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
+
+    // Image Loading
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    // Resource Leak Detection
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+
+    // ContentProvider code generation
+    apt 'net.simonvt.schematic:schematic-compiler:0.6.4'
+    compile 'net.simonvt.schematic:schematic:0.6.4'
+}

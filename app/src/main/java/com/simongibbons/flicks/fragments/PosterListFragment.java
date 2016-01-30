@@ -34,6 +34,8 @@ public class PosterListFragment extends Fragment {
 
     List<MovieData> movieList;
 
+    private final String LOG_TAG = this.getClass().getSimpleName();
+
 
 
     private GridLayoutManager manager;
@@ -113,6 +115,7 @@ public class PosterListFragment extends Fragment {
         // Add a on scroll listener to add more data when we run out.
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+
             private int previousTotal = 0;
             private boolean loading = true;
             private int visibleThreshold = 3;
@@ -126,7 +129,7 @@ public class PosterListFragment extends Fragment {
                 int firstVisibleItem = manager.findFirstVisibleItemPosition();
 
                 if(loading) {
-                    if(totalItemCount > previousTotal) {
+                    if(totalItemCount != previousTotal) {
                         loading = false;
                         previousTotal = totalItemCount;
                     }

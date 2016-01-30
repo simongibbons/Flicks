@@ -36,7 +36,7 @@ public class TheMovieDbAPI {
     static final Map<Integer, String> sort_map = new HashMap<>();
     static {
         sort_map.put(SORT_POPULARITY, "popularity.desc");
-        sort_map.put(SORT_NUM_RATINGS, "vote_count.desc");
+        sort_map.put(SORT_NUM_RATINGS, "vote_average.desc");
     }
 
     public static String buildPosterUrl(String posterPath) {
@@ -52,6 +52,7 @@ public class TheMovieDbAPI {
 
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(SORT_PARAM, sort_map.get(sort_mode))
+                .appendQueryParameter("vote_count.gte", "30")
                 .appendQueryParameter(PAGE_PARAM, Integer.toString(nextPage))
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)
                 .build();

@@ -9,4 +9,5 @@ public class MovieDatabase {
 
     @Table(MovieColumns.class) public static final String MOVIES = "movies";
     @Table(ReviewColumns.class) public static final String REVIEWS = "reviews";
+    @Table(VideoColumns.class) public static final String VIDEOS = "videos";
 }

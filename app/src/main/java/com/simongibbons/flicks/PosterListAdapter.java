@@ -51,7 +51,8 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
             sort_mode = new_sort_mode;
 
             nextPage = 1;
-            movieList.clear();
+
+            movieList = new ArrayList<>();
             loadMoreMovies();
         }
     }

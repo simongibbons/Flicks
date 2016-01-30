@@ -13,7 +13,7 @@ android {
         versionName "1.0"
 
         def STRING = "String"
-        buildConfigField STRING, "MOVIE_DB_API_KEY", TMDB_API_KEY
+        buildConfigField STRING, "THE_MOVIE_DB_API_KEY", MY_API_KEY
     }
     buildTypes {
         release {
@@ -33,7 +33,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.1'
 
     // HTTP Library
-    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.squareup.okhttp3:okhttp:3.0.1'
 
     // Image Loading
     compile 'com.squareup.picasso:picasso:2.5.2'

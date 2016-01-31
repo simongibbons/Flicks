@@ -1,4 +1,4 @@
-package com.simongibbons.flicks;
+package com.simongibbons.flicks.api;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package com.simongibbons.flicks;
+package com.simongibbons.flicks.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.simongibbons.flicks.DetailActivity;
+import com.simongibbons.flicks.api.MovieData;
+import com.simongibbons.flicks.R;
+import com.simongibbons.flicks.api.TheMovieDbAPI;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

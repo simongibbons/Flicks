@@ -3,6 +3,8 @@ package com.simongibbons.flicks;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.stetho.Stetho;
+
 import java.io.IOException;
 
 import okhttp3.Cache;
@@ -18,6 +20,12 @@ public class FlicksApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                        .build());
+
         // Setup global okHttp instance so that we can cache responses.
 
         int cacheSize = 5 * 1024 * 1024; //5 MiB for API responses only
@@ -32,7 +40,6 @@ public class FlicksApplication extends Application {
         okHttpClient = new OkHttpClient.Builder()
                 .cache(cache)
                 .build();
-
     }
 
     public OkHttpClient getOkHttpClient() {

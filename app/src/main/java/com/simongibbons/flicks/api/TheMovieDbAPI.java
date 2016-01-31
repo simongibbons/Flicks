@@ -1,7 +1,13 @@
-package com.simongibbons.flicks;
+package com.simongibbons.flicks.api;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
+
+import com.simongibbons.flicks.BuildConfig;
+import com.simongibbons.flicks.database.MovieProvider;
+import com.simongibbons.flicks.database.ReviewColumns;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,6 +89,49 @@ public class TheMovieDbAPI {
 
                 if(handler != null && onCompletion != null) {
                     handler.post(onCompletion);
+                }
+            }
+        });
+    }
+
+    public static void loadReviewsIntoDb(final Context context, OkHttpClient okHttpClient, int movieId) {
+        Uri uri = Uri.parse("https://api.themoviedb.org/3/").buildUpon()
+                .appendPath("movie")
+                .appendPath(Integer.toString(movieId))
+                .appendPath("reviews")
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(uri.toString())
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) { e.printStackTrace(); }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject result = new JSONObject(response.body().string());
+                    JSONArray reviewJsonArray = result.getJSONArray("results");
+                    int movieId = result.getInt("id");
+
+                    for(int i = 0 ; i < reviewJsonArray.length() ; ++i) {
+                        ContentValues cv = new ContentValues();
+                        JSONObject jsonObject = reviewJsonArray.getJSONObject(i);
+
+                        cv.put(ReviewColumns.MOVIEID, movieId);
+                        cv.put(ReviewColumns.AUTHOR, jsonObject.getString("author"));
+                        cv.put(ReviewColumns.REVIEW, jsonObject.getString("content"));
+                        cv.put(ReviewColumns.REVIEWID, jsonObject.getString("id"));
+
+                        context.getContentResolver().insert(MovieProvider.Reviews.withId(movieId), cv);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
                 }
             }
         });

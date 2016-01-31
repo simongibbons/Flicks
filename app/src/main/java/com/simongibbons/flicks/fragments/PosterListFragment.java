@@ -18,10 +18,10 @@ import android.view.ViewGroup;
 
 import com.simongibbons.flicks.FlicksApplication;
 import com.simongibbons.flicks.MarginDecoration;
-import com.simongibbons.flicks.MovieData;
-import com.simongibbons.flicks.PosterListAdapter;
+import com.simongibbons.flicks.api.MovieData;
+import com.simongibbons.flicks.adapters.PosterListAdapter;
 import com.simongibbons.flicks.R;
-import com.simongibbons.flicks.TheMovieDbAPI;
+import com.simongibbons.flicks.api.TheMovieDbAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PosterListFragment extends Fragment {
+public class PosterListFragment extends Fragment  {
 
     List<MovieData> movieList;
 

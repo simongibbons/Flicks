@@ -45,4 +45,8 @@ dependencies {
     // ContentProvider code generation
     apt 'net.simonvt.schematic:schematic-compiler:0.6.4'
     compile 'net.simonvt.schematic:schematic:0.6.4'
+
+    // Allow debugging of the database!
+    compile 'com.facebook.stetho:stetho:1.1.1'
+    compile 'com.facebook.stetho:stetho-okhttp:1.1.1'
 }

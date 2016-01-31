@@ -1,20 +1,31 @@
 package com.simongibbons.flicks.fragments;
 
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import com.simongibbons.flicks.MovieData;
+import com.simongibbons.flicks.FlicksApplication;
 import com.simongibbons.flicks.R;
+import com.simongibbons.flicks.adapters.ReviewAdapter;
+import com.simongibbons.flicks.api.MovieData;
+import com.simongibbons.flicks.api.TheMovieDbAPI;
+import com.simongibbons.flicks.database.MovieProvider;
+import com.simongibbons.flicks.database.ReviewColumns;
 import com.squareup.picasso.Picasso;
 
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
 
@@ -22,7 +33,15 @@ public class DetailFragment extends Fragment {
         // Required empty public constructor
     }
 
+    ReviewAdapter reviewAdapter;
 
+    private static final int REVIEW_LOADER = 0;
+    private static final String[] REVIEW_COLUMNS = {
+            ReviewColumns._ID,
+            ReviewColumns.REVIEW
+    };
+    public static final int COL_REVIEW_ID = 0;
+    public static final int COL_REVIEW_TEXT = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,7 +71,56 @@ public class DetailFragment extends Fragment {
                     .into(posterView);
         }
 
+        // Setup loading reviews
+        reviewAdapter = new ReviewAdapter(getActivity(), null, 0);
+        ListView reviewList = (ListView) view.findViewById(R.id.detail_fragment_review_list);
+        reviewList.setAdapter(reviewAdapter);
+
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getLoaderManager().initLoader(REVIEW_LOADER, null, this);
+
+        int movieId = ((MovieData) getArguments().get("movie")).id;
+
+        FlicksApplication app = (FlicksApplication) getActivity().getApplication();
+
+        TheMovieDbAPI.loadReviewsIntoDb(getActivity(), app.getOkHttpClient(), movieId);
+    }
+
+    // Functions to implement a loader to populate the desired views.
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case REVIEW_LOADER: {
+                MovieData movie = (MovieData) getArguments().get("movie");
+
+                Uri uri = MovieProvider.Reviews.withId(movie.id);
+
+                return new CursorLoader(getActivity(),
+                        uri,
+                        REVIEW_COLUMNS,
+                        null,
+                        null,
+                        null);
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        reviewAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        reviewAdapter.swapCursor(null);
+    }
 }

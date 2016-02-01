@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.simongibbons.flicks.BuildConfig;
+import com.simongibbons.flicks.R;
 import com.simongibbons.flicks.database.MovieColumns;
 import com.simongibbons.flicks.database.MovieProvider;
 import com.simongibbons.flicks.database.ReviewColumns;
@@ -91,7 +92,7 @@ public class TheMovieDbAPI {
 
                     Vector<ContentValues> cVVector = new Vector<>(movieJSONArray.length());
 
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                    DateFormat dateFormat = new SimpleDateFormat(context.getString(R.string.tmdb_date_format), Locale.ENGLISH);
 
                     for(int i = 0 ; i < movieJSONArray.length() ; ++i) {
                         JSONObject movieObject = movieJSONArray.getJSONObject(i);

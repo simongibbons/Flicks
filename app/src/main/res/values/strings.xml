@@ -4,4 +4,6 @@
     <string name="title_activity_detail">DetailActivity</string>
 
     <string name="format_rating">Rating: <xliff:g id="rating">%1.1f</xliff:g> / 10</string>
+    <string name="format_release_date">MMM yyyy</string>
+    <string name="tmdb_date_format">yyyy-MM-dd</string>
 </resources>

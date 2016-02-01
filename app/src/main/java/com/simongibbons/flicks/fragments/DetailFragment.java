@@ -101,7 +101,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             TextView descriptionView = (TextView) view.findViewById(R.id.detail_fragment_overview);
             descriptionView.setText(movieCursor.getString(COL_OVERVIEW));
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(getString(R.string.format_release_date), Locale.ENGLISH);
             Date date = new Date(movieCursor.getLong(COL_RELEASE_DATE));
 
             TextView releaseDateView = (TextView) view.findViewById(R.id.detail_fragment_release_date);

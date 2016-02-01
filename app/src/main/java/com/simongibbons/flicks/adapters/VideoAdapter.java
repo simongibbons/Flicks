@@ -44,7 +44,7 @@ public class VideoAdapter extends CursorAdapter {
         final String youtubeKey = cursor.getString(DetailFragment.COL_YOUTUBE_KEY);
         Uri thumbnailUri = Uri.parse("http://img.youtube.com/vi/").buildUpon()
                 .appendPath(youtubeKey)
-                .appendPath("default.jpg")
+                .appendPath("hqdefault.jpg")
                 .build();
 
         Picasso.with(context).load(thumbnailUri).into(viewHolder.videoThumbnailView);

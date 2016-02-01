@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Handler;
 
 import com.simongibbons.flicks.BuildConfig;
+import com.simongibbons.flicks.database.MovieColumns;
 import com.simongibbons.flicks.database.MovieProvider;
 import com.simongibbons.flicks.database.ReviewColumns;
 import com.simongibbons.flicks.database.VideoColumns;
@@ -51,7 +52,8 @@ public class TheMovieDbAPI {
         return "https://image.tmdb.org/t/p/w185" + posterPath;
     }
 
-    public static void loadMoviePage(int nextPage, final List<MovieData> movieList, int sort_mode,
+    public static void loadMoviePage(final Context context, int nextPage,
+                                     final List<MovieData> movieList, int sort_mode,
                                      OkHttpClient okHttpClient,
                                      final Handler handler, final Runnable onCompletion) {
         if(onCompletion == null && handler == null) {
@@ -80,6 +82,28 @@ public class TheMovieDbAPI {
                 try {
                     JSONObject result = new JSONObject(response.body().string());
                     JSONArray movieJSONArray = result.getJSONArray("results");
+
+                    Vector<ContentValues> cVVector = new Vector<>(movieJSONArray.length());
+
+                    for(int i = 0 ; i < movieJSONArray.length() ; ++i) {
+                        JSONObject movieObject = movieJSONArray.getJSONObject(i);
+
+                        ContentValues cv = new ContentValues();
+                        cv.put(MovieColumns.MOVIEID, movieObject.getInt("id"));
+                        cv.put(MovieColumns.RATING, movieObject.getDouble("vote_average"));
+                        cv.put(MovieColumns.OVERVIEW, movieObject.getString("overview"));
+                        cv.put(MovieColumns.NAME, movieObject.getString("title"));
+
+                        cVVector.add(cv);
+                    }
+
+                    if(cVVector.size() > 0) {
+                        ContentValues [] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+
+                        context.getContentResolver().bulkInsert(MovieProvider.Movies.CONTENT_URI, cVArray);
+                    }
+
 
                     for(int i = 0 ; i < movieJSONArray.length() ; ++i) {
                         movieList.add(MovieData.getMovieDataFromJson(movieJSONArray.getJSONObject(i)));

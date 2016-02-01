@@ -17,10 +17,12 @@ import android.widget.TextView;
 import com.simongibbons.flicks.FlicksApplication;
 import com.simongibbons.flicks.R;
 import com.simongibbons.flicks.adapters.ReviewAdapter;
+import com.simongibbons.flicks.adapters.VideoAdapter;
 import com.simongibbons.flicks.api.MovieData;
 import com.simongibbons.flicks.api.TheMovieDbAPI;
 import com.simongibbons.flicks.database.MovieProvider;
 import com.simongibbons.flicks.database.ReviewColumns;
+import com.simongibbons.flicks.database.VideoColumns;
 import com.simongibbons.flicks.ui.AdapterLinearLayout;
 import com.squareup.picasso.Picasso;
 
@@ -42,6 +44,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     };
     public static final int COL_REVIEW_ID = 0;
     public static final int COL_REVIEW_TEXT = 1;
+
+    VideoAdapter videoAdapter;
+
+    private static final int VIDEO_LOADER = 1;
+    private static final String[] VIDEO_COLUMNS = {
+            VideoColumns._ID,
+            VideoColumns.NAME,
+            VideoColumns.YOUTUBE_KEY
+    };
+    public static final int COL_VIDEO_ID = 0;
+    public static final int COL_VIDEO_NAME = 1;
+    public static final int COL_YOUTUBE_KEY = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +90,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         AdapterLinearLayout reviewList = (AdapterLinearLayout) view.findViewById(R.id.detail_fragment_review_list);
         reviewList.setAdapter(reviewAdapter);
 
+        // Setup loading videos
+        videoAdapter = new VideoAdapter(getActivity(), null, 0);
+        AdapterLinearLayout videoList = (AdapterLinearLayout) view.findViewById(R.id.detail_fragment_trailer_list);
+        videoList.setAdapter(videoAdapter);
+
         return view;
     }
 
@@ -84,6 +103,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
 
         getLoaderManager().initLoader(REVIEW_LOADER, null, this);
+        getLoaderManager().initLoader(VIDEO_LOADER, null, this);
 
         int movieId = ((MovieData) getArguments().get("movie")).id;
 
@@ -110,6 +130,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                         null,
                         null);
             }
+
+            case VIDEO_LOADER: {
+                MovieData movie = (MovieData) getArguments().get("movie");
+
+                Uri uri = MovieProvider.Videos.withId(movie.id);
+
+                return new CursorLoader(getActivity(),
+                        uri,
+                        VIDEO_COLUMNS,
+                        null,
+                        null,
+                        null);
+            }
         }
 
         return null;
@@ -117,11 +150,29 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        reviewAdapter.swapCursor(data);
+        switch (loader.getId()) {
+            case REVIEW_LOADER: {
+                reviewAdapter.swapCursor(data);
+                break;
+            }
+            case VIDEO_LOADER: {
+                videoAdapter.swapCursor(data);
+                break;
+            }
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        reviewAdapter.swapCursor(null);
+        switch (loader.getId()) {
+            case REVIEW_LOADER: {
+                reviewAdapter.swapCursor(null);
+                break;
+            }
+            case VIDEO_LOADER: {
+                videoAdapter.swapCursor(null);
+                break;
+            }
+        }
     }
 }

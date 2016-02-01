@@ -17,7 +17,7 @@ public class MovieProvider {
 
     @TableEndpoint(table = MovieDatabase.MOVIES)
     public static class Movies {
-        @ContentUri(path = Path.MOVIES, type = "vnd.android.cursor.dir/list")
+        @ContentUri(path = Path.MOVIES, type = "vnd.android.cursor.dir/movie")
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/movie");
     }
 
@@ -25,9 +25,9 @@ public class MovieProvider {
     public static class Reviews {
         @InexactContentUri(
                 path = Path.MOVIES + "/#" + "/reviews",
-                type = "vnd.android.cursor.item/list",
+                type = "vnd.android.cursor.dir/review",
                 name = "MOVIE_ID",
-                whereColumn = MovieColumns.MOVIEID,
+                whereColumn = MovieColumns.MOVIE_ID,
                 pathSegment = 1
         )
         public static Uri withId(int id) {
@@ -39,13 +39,27 @@ public class MovieProvider {
     public static class Videos {
         @InexactContentUri(
                 path = Path.MOVIES + "/#" + "/videos",
-                type = "vnd.android.cursor.item/list",
+                type = "vnd.android.cursor.dir/video",
                 name = "MOVIE_ID",
-                whereColumn = MovieColumns.MOVIEID,
+                whereColumn = MovieColumns.MOVIE_ID,
                 pathSegment = 1
         )
         public static Uri withId(int id) {
             return Uri.parse("content://" + AUTHORITY + "/movie/" + id + "/videos");
+        }
+    }
+
+    @TableEndpoint(table = MovieDatabase.MOVIES)
+    public static class Movie {
+        @InexactContentUri(
+                path = Path.MOVIES + "/#",
+                type = "vn.android.cursor.item/movie",
+                name = "MOVIE_ID",
+                whereColumn = MovieColumns.MOVIE_ID,
+                pathSegment = 1
+        )
+        public static Uri withId(int id) {
+            return Uri.parse("content://" + AUTHORITY + "/movie/" + id);
         }
     }
 }

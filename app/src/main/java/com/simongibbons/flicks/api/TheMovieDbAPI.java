@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 
 import com.simongibbons.flicks.BuildConfig;
 import com.simongibbons.flicks.database.MovieColumns;
@@ -16,8 +17,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
@@ -85,14 +91,24 @@ public class TheMovieDbAPI {
 
                     Vector<ContentValues> cVVector = new Vector<>(movieJSONArray.length());
 
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
                     for(int i = 0 ; i < movieJSONArray.length() ; ++i) {
                         JSONObject movieObject = movieJSONArray.getJSONObject(i);
 
                         ContentValues cv = new ContentValues();
-                        cv.put(MovieColumns.MOVIEID, movieObject.getInt("id"));
+                        cv.put(MovieColumns.MOVIE_ID, movieObject.getInt("id"));
                         cv.put(MovieColumns.RATING, movieObject.getDouble("vote_average"));
                         cv.put(MovieColumns.OVERVIEW, movieObject.getString("overview"));
                         cv.put(MovieColumns.NAME, movieObject.getString("title"));
+                        cv.put(MovieColumns.POSTER_PATH, movieObject.getString("poster_path"));
+                        try {
+                            Date date = dateFormat.parse(movieObject.getString("release_date"));
+                            cv.put(MovieColumns.RELEASE_DATE, date.getTime());
+                        } catch (ParseException e) {
+                            Log.v("Date Error", "couldn't parse date");
+                        }
+
 
                         cVVector.add(cv);
                     }
@@ -149,10 +165,10 @@ public class TheMovieDbAPI {
                         ContentValues cv = new ContentValues();
                         JSONObject jsonObject = reviewJsonArray.getJSONObject(i);
 
-                        cv.put(ReviewColumns.MOVIEID, movieId);
+                        cv.put(ReviewColumns.MOVIE_ID, movieId);
                         cv.put(ReviewColumns.AUTHOR, jsonObject.getString("author"));
                         cv.put(ReviewColumns.REVIEW, jsonObject.getString("content"));
-                        cv.put(ReviewColumns.REVIEWID, jsonObject.getString("id"));
+                        cv.put(ReviewColumns.REVIEW_ID, jsonObject.getString("id"));
 
                         cVVector.add(cv);
                     }
@@ -204,8 +220,8 @@ public class TheMovieDbAPI {
 
                         ContentValues cv = new ContentValues();
 
-                        cv.put(VideoColumns.MOVIEID, movieId);
-                        cv.put(VideoColumns.VIDEOID, jsonObject.getString("id"));
+                        cv.put(VideoColumns.MOVIE_ID, movieId);
+                        cv.put(VideoColumns.VIDEO_ID, jsonObject.getString("id"));
                         cv.put(VideoColumns.YOUTUBE_KEY, jsonObject.getString("key"));
                         cv.put(VideoColumns.NAME, jsonObject.getString("name"));
                         cv.put(VideoColumns.TYPE, jsonObject.getString("type"));

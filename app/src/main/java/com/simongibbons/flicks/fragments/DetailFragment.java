@@ -20,11 +20,16 @@ import com.simongibbons.flicks.adapters.ReviewAdapter;
 import com.simongibbons.flicks.adapters.VideoAdapter;
 import com.simongibbons.flicks.api.MovieData;
 import com.simongibbons.flicks.api.TheMovieDbAPI;
+import com.simongibbons.flicks.database.MovieColumns;
 import com.simongibbons.flicks.database.MovieProvider;
 import com.simongibbons.flicks.database.ReviewColumns;
 import com.simongibbons.flicks.database.VideoColumns;
 import com.simongibbons.flicks.ui.AdapterLinearLayout;
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -66,24 +71,54 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // Get data passed from arguments
         MovieData movie = (MovieData) getArguments().get("movie");
 
-        if(movie != null) {
+        int movieId = movie.id;
+
+        final String[] MOVIE_COLUMNS = {
+                MovieColumns.NAME,
+                MovieColumns.OVERVIEW,
+                MovieColumns.RATING,
+                MovieColumns.POSTER_PATH,
+                MovieColumns.RELEASE_DATE
+        };
+
+        final int COL_NAME = 0;
+        final int COL_OVERVIEW = 1;
+        final int COL_RATING = 2;
+        final int COL_POSTER_PATH = 3;
+        final int COL_RELEASE_DATE = 4;
+
+        Cursor movieCursor = getActivity().getContentResolver().query(
+                MovieProvider.Movie.withId(movieId),
+                MOVIE_COLUMNS,
+                null,
+                null,
+                null
+        );
+
+        if(movieCursor != null && movieCursor.moveToFirst()) {
             TextView titleView = (TextView) view.findViewById(R.id.detail_fragment_title);
-            titleView.setText(movie.title);
+            titleView.setText(movieCursor.getString(COL_NAME));
 
             TextView descriptionView = (TextView) view.findViewById(R.id.detail_fragment_overview);
-            descriptionView.setText(movie.overview);
+            descriptionView.setText(movieCursor.getString(COL_OVERVIEW));
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
+            Date date = new Date(movieCursor.getLong(COL_RELEASE_DATE));
 
             TextView releaseDateView = (TextView) view.findViewById(R.id.detail_fragment_release_date);
-            releaseDateView.setText(movie.releaseDate);
+            releaseDateView.setText(dateFormat.format(date));
 
             TextView ratingView = (TextView) view.findViewById(R.id.detail_fragment_rating);
-            ratingView.setText(String.format(getString(R.string.format_rating), movie.rating));
+            ratingView.setText(String.format(getString(R.string.format_rating), movieCursor.getFloat(COL_RATING)));
 
             ImageView posterView = (ImageView) view.findViewById(R.id.detail_fragment_poster);
             Picasso.with(getActivity())
-                    .load("https://image.tmdb.org/t/p/w185" + movie.posterPath)
+                    .load("https://image.tmdb.org/t/p/w185" + movieCursor.getString(COL_POSTER_PATH))
                     .into(posterView);
+
+            movieCursor.close();
         }
+
 
         // Setup loading reviews
         reviewAdapter = new ReviewAdapter(getActivity(), null, 0);

@@ -105,7 +105,7 @@ public class PosterListAdapter extends RecyclerView.Adapter<PosterListAdapter.Vi
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("movie", movieList.get(getAdapterPosition()));
+            intent.putExtra("movie_id", movieList.get(getAdapterPosition()).id);
 
             context.startActivity(intent);
         }

@@ -18,7 +18,6 @@ import com.simongibbons.flicks.FlicksApplication;
 import com.simongibbons.flicks.R;
 import com.simongibbons.flicks.adapters.ReviewAdapter;
 import com.simongibbons.flicks.adapters.VideoAdapter;
-import com.simongibbons.flicks.api.MovieData;
 import com.simongibbons.flicks.api.TheMovieDbAPI;
 import com.simongibbons.flicks.database.MovieColumns;
 import com.simongibbons.flicks.database.MovieProvider;
@@ -35,6 +34,8 @@ import java.util.Locale;
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
+
+    private int movieId;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -62,16 +63,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_VIDEO_NAME = 1;
     public static final int COL_YOUTUBE_KEY = 2;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        // Get data passed from arguments
-        MovieData movie = (MovieData) getArguments().get("movie");
-
-        int movieId = movie.id;
+        movieId = getArguments().getInt("movie_id", 0);
 
         final String[] MOVIE_COLUMNS = {
                 MovieColumns.NAME,
@@ -137,10 +136,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+
         getLoaderManager().initLoader(REVIEW_LOADER, null, this);
         getLoaderManager().initLoader(VIDEO_LOADER, null, this);
-
-        int movieId = ((MovieData) getArguments().get("movie")).id;
 
         FlicksApplication app = (FlicksApplication) getActivity().getApplication();
 
@@ -154,9 +152,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case REVIEW_LOADER: {
-                MovieData movie = (MovieData) getArguments().get("movie");
-
-                Uri uri = MovieProvider.Reviews.withId(movie.id);
+                Uri uri = MovieProvider.Reviews.withId(movieId);
 
                 return new CursorLoader(getActivity(),
                         uri,
@@ -167,9 +163,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             }
 
             case VIDEO_LOADER: {
-                MovieData movie = (MovieData) getArguments().get("movie");
-
-                Uri uri = MovieProvider.Videos.withId(movie.id);
+                Uri uri = MovieProvider.Videos.withId(movieId);
 
                 return new CursorLoader(getActivity(),
                         uri,

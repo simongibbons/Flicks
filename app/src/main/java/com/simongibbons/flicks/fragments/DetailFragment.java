@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.simongibbons.flicks.FlicksApplication;
@@ -22,6 +21,7 @@ import com.simongibbons.flicks.api.MovieData;
 import com.simongibbons.flicks.api.TheMovieDbAPI;
 import com.simongibbons.flicks.database.MovieProvider;
 import com.simongibbons.flicks.database.ReviewColumns;
+import com.simongibbons.flicks.ui.AdapterLinearLayout;
 import com.squareup.picasso.Picasso;
 
 
@@ -73,7 +73,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // Setup loading reviews
         reviewAdapter = new ReviewAdapter(getActivity(), null, 0);
-        ListView reviewList = (ListView) view.findViewById(R.id.detail_fragment_review_list);
+        AdapterLinearLayout reviewList = (AdapterLinearLayout) view.findViewById(R.id.detail_fragment_review_list);
         reviewList.setAdapter(reviewAdapter);
 
         return view;

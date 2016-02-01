@@ -64,10 +64,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <ListView
+        <com.simongibbons.flicks.ui.AdapterLinearLayout
             android:id="@+id/detail_fragment_review_list"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 </ScrollView>

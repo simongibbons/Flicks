@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.simongibbons.flicks.DetailActivity;
+import com.simongibbons.flicks.activities.DetailActivity;
 import com.simongibbons.flicks.api.MovieData;
 import com.simongibbons.flicks.R;
 import com.simongibbons.flicks.api.TheMovieDbAPI;

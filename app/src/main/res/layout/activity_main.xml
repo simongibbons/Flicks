@@ -5,5 +5,5 @@
     android:name="com.simongibbons.flicks.fragments.PosterListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.simongibbons.flicks.MainActivity"
+    tools:context=".activities.MainActivity"
     tools:layout="@layout/fragment_poster_list"/>

@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.simongibbons.flicks.FlicksApplication;
-import com.simongibbons.flicks.MarginDecoration;
+import com.simongibbons.flicks.ui.MarginDecoration;
 import com.simongibbons.flicks.api.MovieData;
 import com.simongibbons.flicks.adapters.PosterListAdapter;
 import com.simongibbons.flicks.R;

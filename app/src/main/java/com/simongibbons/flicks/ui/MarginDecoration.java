@@ -1,9 +1,11 @@
-package com.simongibbons.flicks;
+package com.simongibbons.flicks.ui;
 
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.simongibbons.flicks.R;
 
 public class MarginDecoration extends RecyclerView.ItemDecoration {
     private int margin;

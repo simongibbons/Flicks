@@ -1,7 +1,9 @@
-package com.simongibbons.flicks;
+package com.simongibbons.flicks.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.simongibbons.flicks.R;
 
 public class MainActivity extends AppCompatActivity {
 

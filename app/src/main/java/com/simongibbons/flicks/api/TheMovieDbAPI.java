@@ -8,6 +8,7 @@ import android.os.Handler;
 import com.simongibbons.flicks.BuildConfig;
 import com.simongibbons.flicks.database.MovieProvider;
 import com.simongibbons.flicks.database.ReviewColumns;
+import com.simongibbons.flicks.database.VideoColumns;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -117,6 +119,8 @@ public class TheMovieDbAPI {
                     JSONArray reviewJsonArray = result.getJSONArray("results");
                     int movieId = result.getInt("id");
 
+                    Vector<ContentValues> cVVector = new Vector<>(reviewJsonArray.length());
+
                     for(int i = 0 ; i < reviewJsonArray.length() ; ++i) {
                         ContentValues cv = new ContentValues();
                         JSONObject jsonObject = reviewJsonArray.getJSONObject(i);
@@ -126,12 +130,75 @@ public class TheMovieDbAPI {
                         cv.put(ReviewColumns.REVIEW, jsonObject.getString("content"));
                         cv.put(ReviewColumns.REVIEWID, jsonObject.getString("id"));
 
-                        context.getContentResolver().insert(MovieProvider.Reviews.withId(movieId), cv);
+                        cVVector.add(cv);
+                    }
 
+                    if(cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+
+                        Uri uri = MovieProvider.Reviews.withId(movieId);
+
+                        context.getContentResolver().bulkInsert(uri, cVArray);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    return;
+                }
+            }
+        });
+    }
+
+    public static void loadVideosIntoDb(final Context context, OkHttpClient okHttpClient, int movieId) {
+        Uri uri = Uri.parse("https://api.themoviedb.org/3/").buildUpon()
+                .appendPath("movie")
+                .appendPath(Integer.toString(movieId))
+                .appendPath("videos")
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(uri.toString())
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject result = new JSONObject(response.body().string());
+                    JSONArray reviewJsonArray = result.getJSONArray("results");
+                    int movieId = result.getInt("id");
+
+                    Vector<ContentValues> cVVector = new Vector<>(reviewJsonArray.length());
+
+                    for(int i = 0 ; i < reviewJsonArray.length() ; ++i) {
+                        JSONObject jsonObject = reviewJsonArray.getJSONObject(i);
+
+                        ContentValues cv = new ContentValues();
+
+                        cv.put(VideoColumns.MOVIEID, movieId);
+                        cv.put(VideoColumns.VIDEOID, jsonObject.getString("id"));
+                        cv.put(VideoColumns.YOUTUBE_KEY, jsonObject.getString("key"));
+                        cv.put(VideoColumns.NAME, jsonObject.getString("name"));
+                        cv.put(VideoColumns.TYPE, jsonObject.getString("type"));
+
+                        cVVector.add(cv);
+                    }
+
+                    if(cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+
+                        Uri uri = MovieProvider.Videos.withId(movieId);
+
+                        context.getContentResolver().bulkInsert(uri, cVArray);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });

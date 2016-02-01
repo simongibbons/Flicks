@@ -90,6 +90,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         FlicksApplication app = (FlicksApplication) getActivity().getApplication();
 
         TheMovieDbAPI.loadReviewsIntoDb(getActivity(), app.getOkHttpClient(), movieId);
+        TheMovieDbAPI.loadVideosIntoDb(getActivity(), app.getOkHttpClient(), movieId);
     }
 
     // Functions to implement a loader to populate the desired views.

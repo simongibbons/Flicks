@@ -22,5 +22,11 @@ public class VideoColumns {
     public static final String MOVIEID = "movieid";
 
     @DataType(DataType.Type.TEXT)
+    public static final String NAME = "name";
+
+    @DataType(DataType.Type.TEXT)
+    public static final String TYPE = "type";
+
+    @DataType(DataType.Type.TEXT)
     public static final String YOUTUBE_KEY = "youtube_key";
 }

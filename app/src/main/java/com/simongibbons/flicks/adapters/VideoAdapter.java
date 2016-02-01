@@ -18,8 +18,6 @@ import com.squareup.picasso.Picasso;
 
 public class VideoAdapter extends CursorAdapter {
 
-    public Context context;
-
     public VideoAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
